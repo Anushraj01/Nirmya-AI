@@ -1,8 +1,8 @@
-# MediConnect AI — Project Context
+# Nirmya AI — Project Context
 
 ## Project
 
-MediConnect AI is an AI-assisted doctor appointment platform with a persistent
+Nirmya AI is an AI-assisted doctor appointment platform with a persistent
 patient medical history, a dual-entry symptom checker (body map + free-text AI
 chat), a three-tier urgency triage system (critical/urgent/routine), a
 dedicated Emergency Appointment module, and standard doctor booking + payments.
@@ -51,6 +51,16 @@ dedicated Emergency Appointment module, and standard doctor booking + payments.
 keys, Mongo URI) live **only** in `/server/.env`. They must **never** appear in
 `/client` code or in any `VITE_`-prefixed environment variable.
 
+## Naming Note
+
+The project was originally scoped and documented under the working title
+**MediConnect AI**. It has since been renamed to **Nirmya AI**. The reference
+docs in `/docs` (PRD, Design Document, Tech Stack Document) still say
+"MediConnect AI" internally — treat every mention of "MediConnect AI" in
+those docs as referring to this same project, Nirmya AI, until they're
+updated. Use "Nirmya AI" in all new code, UI copy, commit messages, and
+generated docs going forward.
+
 ## Reference Docs
 
 This project has authoritative source documents — always check them before
@@ -59,11 +69,6 @@ guessing at schema fields, screen names, copy, or design tokens:
 - `/docs/MediConnect_AI_PRD.docx` (or `.md`) — product scope, features, data model
 - `/docs/MediConnect_AI_Design_Doc.docx` (or `.md`) — UI/UX spec, screens, flows
 - `/docs/MediConnect_AI_Tech_Stack.docx` (or `.md`) — stack rationale, architecture
-
-> **Action needed from you**: create a `/docs` folder at the project root and
-> place your PRD, Design Document, and Tech Stack Document there (as `.docx`
-> or `.md`). Once they're in `/docs`, reference them directly for any
-> UI/UX or schema question instead of guessing.
 
 ## Working Style Notes
 
