@@ -8,6 +8,7 @@ import { connectDatabase } from './config/database'
 import { errorHandler } from './middleware/errorHandler'
 import authRoutes from './routes/auth'
 import patientRoutes from './routes/patient'
+import aiRoutes from './routes/ai'
 
 const app = express()
 
@@ -23,6 +24,7 @@ app.get('/api/health', (_req, res) => {
 
 app.use('/api/auth', authRoutes)
 app.use('/api/patient', patientRoutes)
+app.use('/api/ai', aiRoutes)
 
 app.use((req, res, next) => {
   const error = new Error(`Route not found: ${req.originalUrl}`) as Error & { statusCode?: number }
