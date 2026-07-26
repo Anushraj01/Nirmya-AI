@@ -2,6 +2,7 @@ import { useState, type FormEvent } from 'react'
 import { BrowserRouter, Link, Navigate, Route, Routes, useNavigate, useSearchParams } from 'react-router-dom'
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
+import { MedicalHistoryForm } from './components/MedicalHistoryForm'
 
 type Role = 'Patient' | 'Doctor'
 
@@ -421,10 +422,13 @@ function UnauthorizedPage() {
 function PatientPage() {
   return (
     <main className="min-h-screen bg-[#F7F9F8] px-6 py-10">
-      <div className="mx-auto max-w-3xl rounded-[32px] border border-[#E1F5EE] bg-white p-8 shadow-sm">
+      <div className="mx-auto max-w-5xl rounded-[32px] border border-[#E1F5EE] bg-white p-8 shadow-sm">
         <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0F6E56]">Patient portal</p>
         <h1 className="mt-3 text-2xl font-semibold text-[#1E5B8C]">Patient dashboard</h1>
-        <p className="mt-3 text-[#5F5E5A]">Your appointments and medical history will appear here.</p>
+        <p className="mt-3 text-[#5F5E5A]">Keep your medical history up to date and share reports securely with your care team.</p>
+        <div className="mt-8">
+          <MedicalHistoryForm />
+        </div>
       </div>
     </main>
   )
