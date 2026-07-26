@@ -9,6 +9,8 @@ export interface IUser extends Document {
   password: string
   role: UserRole
   approvalStatus: ApprovalStatus
+  passwordResetToken?: string
+  passwordResetTokenExpiresAt?: Date
   createdAt: Date
 }
 
@@ -24,6 +26,8 @@ const userSchema = new Schema<IUser>({
       return this.role === 'Doctor' ? 'pending_approval' : 'approved'
     },
   },
+  passwordResetToken: { type: String },
+  passwordResetTokenExpiresAt: { type: Date },
   createdAt: { type: Date, default: Date.now },
 })
 

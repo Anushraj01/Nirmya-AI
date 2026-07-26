@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser'
 import { env } from './config/env'
 import { connectDatabase } from './config/database'
 import { errorHandler } from './middleware/errorHandler'
+import authRoutes from './routes/auth'
 
 const app = express()
 
@@ -18,6 +19,8 @@ app.use(cookieParser())
 app.get('/api/health', (_req, res) => {
   res.json({ success: true, message: 'Server is healthy', data: { name: 'Nirmya AI' } })
 })
+
+app.use('/api/auth', authRoutes)
 
 app.use((req, res, next) => {
   const error = new Error(`Route not found: ${req.originalUrl}`) as Error & { statusCode?: number }
