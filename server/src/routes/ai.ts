@@ -2,7 +2,7 @@ import { Router } from 'express'
 import { authenticateToken, requireRole } from '../middleware/auth'
 import { MedicalHistory } from '../models/MedicalHistory'
 import { evaluateRedFlagTriage } from '../services/triage'
-import { analyzeSymptomsWithRuleBasedStub } from '../services/symptomSuggestionStub'
+import { analyzeSymptomsWithGroq } from '../services/symptomSuggestionGroq'
 
 const router = Router()
 
@@ -33,7 +33,7 @@ router.post('/analyze-symptoms', authenticateToken, requireRole(['Patient']), as
     const targetPatientId = patientId || req.user?.id
     const medicalHistory = targetPatientId ? await MedicalHistory.findOne({ patientId: targetPatientId }) : null
 
-    const result = analyzeSymptomsWithRuleBasedStub(symptomsText, medicalHistory)
+    const result = await analyzeSymptomsWithGroq(symptomsText, medicalHistory)
 
     res.json({
       success: true,

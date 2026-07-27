@@ -3,6 +3,7 @@ import { BrowserRouter, Link, Navigate, Route, Routes, useNavigate, useSearchPar
 import { AuthProvider, useAuth } from './context/AuthContext'
 import { ProtectedRoute } from './components/ProtectedRoute'
 import { MedicalHistoryForm } from './components/MedicalHistoryForm'
+import { SymptomChecker } from './components/SymptomChecker'
 
 type Role = 'Patient' | 'Doctor'
 
@@ -426,8 +427,34 @@ function PatientPage() {
         <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0F6E56]">Patient portal</p>
         <h1 className="mt-3 text-2xl font-semibold text-[#1E5B8C]">Patient dashboard</h1>
         <p className="mt-3 text-[#5F5E5A]">Keep your medical history up to date and share reports securely with your care team.</p>
+        <Link
+  to="/patient/symptom-checker"
+  className="mt-4 inline-flex rounded-full bg-[#0F6E56] px-4 py-2 font-medium text-white transition hover:bg-[#0b4f3f]"
+>
+  Check my symptoms
+</Link>
         <div className="mt-8">
           <MedicalHistoryForm />
+        </div>
+      </div>
+    </main>
+  )
+}
+
+function SymptomCheckerPage() {
+  return (
+    <main className="min-h-screen bg-[#F7F9F8] px-6 py-10">
+      <div className="mx-auto max-w-5xl rounded-[32px] border border-[#E1F5EE] bg-white p-8 shadow-sm">
+        <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0F6E56]">Symptom Checker</p>
+        <h1 className="mt-3 text-2xl font-semibold text-[#1E5B8C]">What's going on today?</h1>
+        <Link
+  to="/patient/symptom-checker"
+  className="mt-4 inline-flex rounded-full bg-[#0F6E56] px-4 py-2 font-medium text-white transition hover:bg-[#0b4f3f]"
+>
+  Check my symptoms
+</Link>
+        <div className="mt-8">
+          <SymptomChecker />
         </div>
       </div>
     </main>
@@ -470,6 +497,7 @@ function AppRoutes() {
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
         <Route element={<ProtectedRoute allowedRoles={['Patient']} />}>
           <Route path="/patient" element={<PatientPage />} />
+          <Route path="/patient/symptom-checker" element={<SymptomCheckerPage />} />
         </Route>
         <Route element={<ProtectedRoute allowedRoles={['Doctor']} />}>
           <Route path="/doctor" element={<DoctorPage />} />
