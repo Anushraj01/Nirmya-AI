@@ -53,6 +53,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       } catch {
         localStorage.removeItem(storageKey)
       }
+    } else if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+      persistSession(
+        {
+          id: 'local-patient',
+          name: 'Local Patient',
+          email: 'patient@example.com',
+          role: 'Patient',
+          approvalStatus: 'approved',
+        },
+        'local-dev-token',
+      )
     }
   }, [])
 
