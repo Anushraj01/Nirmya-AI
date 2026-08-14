@@ -2,7 +2,7 @@ import { useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
-import { BodyMap, type BodyMapGender } from './BodyMap'
+import { InteractiveBodyMap, type BodyRegion } from './InteractiveBodyMap'
 
 const api = axios.create({ baseURL: 'http://localhost:5000/api', withCredentials: true })
 
@@ -10,20 +10,17 @@ type SymptomAction = 'rule' | 'ai'
 
 export function BodyMapScreen() {
   const [age, setAge] = useState('')
-  const [gender, setGender] = useState<BodyMapGender>('male')
-  const [selectedRegion, setSelectedRegion] = useState<string | null>(null)
-  const [selectedChips, setSelectedChips] = useState<string[]>([])
+  const [selectedRegions, setSelectedRegions] = useState<BodyRegion[]>([])
   const [freeText, setFreeText] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
   const { accessToken } = useAuth()
 
-  const toggleChip = (chip: string) => {
-    setSelectedChips((current) => (current.includes(chip) ? current.filter((c) => c !== chip) : [...current, chip]))
-  }
+  // Derive primary region for backward compatibility
+  const selectedRegion = selectedRegions.length > 0 ? selectedRegions[0].parentRegion : null
 
-  const canSubmit = Boolean(freeText.trim() || selectedRegion || selectedChips.length)
+  const canSubmit = Boolean(freeText.trim() || selectedRegion)
 
   const handleSubmit = async (action: SymptomAction) => {
     if (!canSubmit) return
@@ -32,9 +29,8 @@ export function BodyMapScreen() {
     const payload = {
       symptomsText: freeText.trim(),
       bodyRegion: selectedRegion,
-      selectedChips,
+      selectedRegions: selectedRegions,
       age: normalizedAge ? Number(normalizedAge) : undefined,
-      gender,
     }
 
     setIsLoading(true)
@@ -54,10 +50,9 @@ export function BodyMapScreen() {
         state: {
           result: response.data?.data,
           region: selectedRegion,
-          chips: selectedChips,
+          regions: selectedRegions,
           freeText: freeText.trim(),
           age: normalizedAge,
-          gender,
         },
       })
     } catch (error) {
@@ -74,21 +69,21 @@ export function BodyMapScreen() {
         <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0F6E56]">Symptom checker</p>
         <h1 className="mt-2 text-2xl font-semibold text-[#1E5B8C]">Share a few details and we will guide the next step</h1>
         <p className="mt-2 max-w-2xl text-[#5F5E5A]">
-          Start with your age and gender, mark the body region that feels affected, and then choose a recommendation path.
+          Interact with the body map to identify affected regions. Add free-text details about your symptoms and we'll recommend the next steps.
         </p>
 
         <div className="mt-6 flex flex-wrap gap-2">
           <span className="rounded-full bg-[#0F6E56] px-3 py-1 text-sm font-medium text-white">Intake</span>
-          <span className="rounded-full border border-[#E1F5EE] px-3 py-1 text-sm font-medium text-[#1E5B8C]">Symptoms</span>
+          <span className="rounded-full border border-[#E1F5EE] px-3 py-1 text-sm font-medium text-[#1E5B8C]">Body Selection</span>
           <span className="rounded-full border border-[#E1F5EE] px-3 py-1 text-sm font-medium text-[#1E5B8C]">Recommendation</span>
         </div>
 
         <div className="mt-8 grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
           <div>
             <div className="rounded-3xl border border-[#E1F5EE] bg-[#F7F9F8] p-4 shadow-sm">
-              <div className="grid gap-4 md:grid-cols-2">
+              <div className="grid gap-4 md:grid-cols-1">
                 <label className="space-y-2 text-sm font-medium text-[#1E5B8C]">
-                  <span>Age</span>
+                  <span>Age (optional)</span>
                   <input
                     type="number"
                     min="0"
@@ -98,33 +93,18 @@ export function BodyMapScreen() {
                     placeholder="e.g. 32"
                   />
                 </label>
-
-                <label className="space-y-2 text-sm font-medium text-[#1E5B8C]">
-                  <span>Gender</span>
-                  <select
-                    value={gender}
-                    onChange={(event) => setGender(event.target.value as BodyMapGender)}
-                    className="w-full rounded-2xl border border-[#E1F5EE] bg-white px-4 py-3 text-sm outline-none"
-                  >
-                    <option value="male">Male</option>
-                    <option value="female">Female</option>
-                  </select>
-                </label>
               </div>
 
               <div className="mt-4 rounded-2xl border border-[#E1F5EE] bg-white p-3 text-sm text-[#5F5E5A]">
-                <p className="font-semibold text-[#1E5B8C]">Body map view</p>
-                <p className="mt-1">Switching the gender selector swaps the rendered body asset while keeping the same region selection flow.</p>
+                <p className="font-semibold text-[#1E5B8C]">Interactive Body Map</p>
+                <p className="mt-1">Click on any region to select it. Toggle between Front and Back views to map all affected areas.</p>
               </div>
             </div>
 
             <div className="mt-4">
-              <BodyMap
-                gender={gender}
-                selectedRegion={selectedRegion}
-                selectedChips={selectedChips}
-                onSelectRegion={setSelectedRegion}
-                onToggleChip={toggleChip}
+              <InteractiveBodyMap
+                selectedRegions={selectedRegions}
+                onSelectRegion={setSelectedRegions}
               />
             </div>
           </div>
@@ -132,9 +112,10 @@ export function BodyMapScreen() {
           <div className="rounded-3xl border border-[#E1F5EE] bg-[#F7F9F8] p-6">
             <h2 className="text-lg font-semibold text-[#1E5B8C]">How this works</h2>
             <div className="mt-4 space-y-3 text-sm text-[#5F5E5A]">
-              <p>1. Share your age and gender so the intake is complete.</p>
-              <p>2. Pick a region and any matching symptom chips.</p>
-              <p>3. Choose a fast recommendation or a deeper AI analysis.</p>
+              <p>1. Share your age (optional) to personalize guidance.</p>
+              <p>2. Select affected body regions on the interactive map.</p>
+              <p>3. Describe your symptoms in detail below.</p>
+              <p>4. Get a fast recommendation or deeper AI analysis.</p>
             </div>
 
             <label className="mt-6 mb-2 block text-sm font-medium text-[#1E5B8C]">Describe your symptoms</label>
@@ -148,8 +129,8 @@ export function BodyMapScreen() {
 
             <div className="mt-4 rounded-2xl border border-[#E1F5EE] bg-white p-4 text-sm text-[#5F5E5A]">
               <p className="font-semibold text-[#1E5B8C]">Current selection</p>
-              <p className="mt-2">Region: {selectedRegion ?? 'Not selected'}</p>
-              <p className="mt-1">Symptoms: {selectedChips.length ? selectedChips.join(', ') : 'None selected yet'}</p>
+              <p className="mt-2">Regions: {selectedRegions.length ? selectedRegions.map(r => r.parentRegion).join(', ') : 'Not selected'}</p>
+              <p className="mt-1">Symptoms provided: {freeText.trim() ? 'Yes' : 'No'}</p>
             </div>
 
             {errorMessage ? <div className="mt-4 rounded-2xl border border-[#D85A30] bg-[#FDEDE8] px-4 py-3 text-sm text-[#D85A30]">{errorMessage}</div> : null}
