@@ -1,7 +1,8 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
+import { readSelectedSymptoms, saveSelectedSymptoms } from '../utils/bodyMapStorage'
 import { InteractiveBodyMap, type BodyRegion } from './InteractiveBodyMap'
 
 const api = axios.create({ baseURL: 'http://localhost:5000/api', withCredentials: true })
@@ -16,6 +17,34 @@ export function BodyMapScreen() {
   const [errorMessage, setErrorMessage] = useState('')
   const navigate = useNavigate()
   const { accessToken } = useAuth()
+
+  useEffect(() => {
+    const saved = readSelectedSymptoms<{ age?: string | number; freeText?: string; selectedRegions?: BodyRegion[]; selections?: BodyRegion[]; symptoms?: BodyRegion[]; selectedSymptoms?: BodyRegion[] }>()
+
+    if (!saved) return
+
+    const incomingRegions = Array.isArray(saved.selectedRegions)
+      ? saved.selectedRegions
+      : Array.isArray(saved.selections)
+        ? saved.selections
+        : Array.isArray(saved.symptoms)
+          ? saved.symptoms
+          : Array.isArray(saved.selectedSymptoms)
+            ? saved.selectedSymptoms
+            : []
+
+    if (incomingRegions.length > 0) {
+      setSelectedRegions(incomingRegions)
+    }
+
+    if (saved.freeText) {
+      setFreeText(saved.freeText)
+    }
+
+    if (saved.age !== undefined && saved.age !== null && saved.age !== '') {
+      setAge(String(saved.age))
+    }
+  }, [])
 
   // Derive primary region for backward compatibility
   const selectedRegion = selectedRegions.length > 0 ? selectedRegions[0].parentRegion : null
@@ -32,6 +61,12 @@ export function BodyMapScreen() {
       selectedRegions: selectedRegions,
       age: normalizedAge ? Number(normalizedAge) : undefined,
     }
+
+    saveSelectedSymptoms({
+      ...payload,
+      freeText: freeText.trim(),
+      age: normalizedAge,
+    })
 
     setIsLoading(true)
     setErrorMessage('')

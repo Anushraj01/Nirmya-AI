@@ -1,4 +1,6 @@
+import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
+import { extractSymptomSummary, readSelectedSymptoms } from '../utils/bodyMapStorage'
 
 type AnalysisResult = {
   specialty: string
@@ -20,6 +22,17 @@ export function RecommendationScreen() {
   const navigate = useNavigate()
   const state = (location.state ?? {}) as RecommendationState
   const result = state.result
+  const [savedSummary, setSavedSummary] = useState('')
+
+  useEffect(() => {
+    if (result) return
+
+    const saved = readSelectedSymptoms<{ freeText?: string; selectedRegions?: Array<{ parentRegion?: string; subRegion?: string | null; severity?: number | null }>; symptoms?: Array<{ parentRegion?: string; subRegion?: string | null; severity?: number | null }> }>()
+
+    if (saved) {
+      setSavedSummary(extractSymptomSummary(saved))
+    }
+  }, [result])
 
   if (!result) {
     return (
@@ -27,6 +40,12 @@ export function RecommendationScreen() {
         <div className="rounded-[32px] border border-[#E1F5EE] bg-white p-8 shadow-sm">
           <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0F6E56]">Recommendation</p>
           <h1 className="mt-2 text-2xl font-semibold text-[#1E5B8C]">No recommendation was captured yet.</h1>
+          {savedSummary ? (
+            <div className="mt-4 rounded-2xl border border-[#E1F5EE] bg-[#F7F9F8] p-4 text-sm text-[#5F5E5A]">
+              <p className="font-semibold text-[#1E5B8C]">Saved symptom summary</p>
+              <p className="mt-2">{savedSummary}</p>
+            </div>
+          ) : null}
           <button
             onClick={() => navigate('/patient/symptom-checker/body-map')}
             className="mt-6 rounded-full bg-[#0F6E56] px-4 py-2 font-medium text-white"

@@ -429,12 +429,15 @@ function PatientPage() {
         <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0F6E56]">Patient portal</p>
         <h1 className="mt-3 text-2xl font-semibold text-[#1E5B8C]">Patient dashboard</h1>
         <p className="mt-3 text-[#5F5E5A]">Keep your medical history up to date and share reports securely with your care team.</p>
-        <Link
-  to="/patient/symptom-checker"
-  className="mt-4 inline-flex rounded-full bg-[#0F6E56] px-4 py-2 font-medium text-white transition hover:bg-[#0b4f3f]"
->
-  Check my symptoms
-</Link>
+        <button
+          type="button"
+          onClick={() => {
+            window.location.href = '/bodymap/index.html'
+          }}
+          className="mt-4 inline-flex rounded-full bg-[#0F6E56] px-4 py-2 font-medium text-white transition hover:bg-[#0b4f3f]"
+        >
+          Check my symptoms
+        </button>
         <div className="mt-8">
           <MedicalHistoryForm />
         </div>
