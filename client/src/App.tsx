@@ -423,21 +423,45 @@ function UnauthorizedPage() {
 }
 
 function PatientPage() {
+  const [gender, setGender] = useState<'male' | 'female' | null>(null)
+
   return (
     <main className="min-h-screen bg-[#F7F9F8] px-6 py-10">
       <div className="mx-auto max-w-5xl rounded-[32px] border border-[#E1F5EE] bg-white p-8 shadow-sm">
         <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#0F6E56]">Patient portal</p>
         <h1 className="mt-3 text-2xl font-semibold text-[#1E5B8C]">Patient dashboard</h1>
         <p className="mt-3 text-[#5F5E5A]">Keep your medical history up to date and share reports securely with your care team.</p>
-        <button
-          type="button"
-          onClick={() => {
-            window.location.href = '/bodymap/index.html'
-          }}
-          className="mt-4 inline-flex rounded-full bg-[#0F6E56] px-4 py-2 font-medium text-white transition hover:bg-[#0b4f3f]"
-        >
-          Check my symptoms
-        </button>
+        <div className="mt-6 max-w-md rounded-2xl border border-[#E1F5EE] bg-[#F7F9F8] p-4">
+          <p className="font-semibold text-[#1E5B8C]">Before we begin</p>
+          <p className="mt-1 text-sm text-[#5F5E5A]">Choose the body map that matches you.</p>
+          <div className="mt-3 flex gap-2">
+            {(['male', 'female'] as const).map((option) => (
+              <button
+                key={option}
+                type="button"
+                onClick={() => setGender(option)}
+                aria-pressed={gender === option}
+                className={`rounded-2xl border px-4 py-2 text-sm font-medium capitalize transition ${
+                  gender === option
+                    ? 'border-[#0F6E56] bg-[#0F6E56] text-white'
+                    : 'border-[#1E5B8C] bg-white text-[#1E5B8C] hover:bg-[#E1F5EE]'
+                }`}
+              >
+                {option}
+              </button>
+            ))}
+          </div>
+          <button
+            type="button"
+            disabled={!gender}
+            onClick={() => {
+              if (gender) window.location.href = `/bodymap/index.html?gender=${gender}`
+            }}
+            className="mt-4 rounded-full bg-[#0F6E56] px-4 py-2 font-medium text-white transition hover:bg-[#0b4f3f] disabled:cursor-not-allowed disabled:opacity-50"
+          >
+            Check my symptoms
+          </button>
+        </div>
         <div className="mt-8">
           <MedicalHistoryForm />
         </div>

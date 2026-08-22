@@ -3,13 +3,14 @@ import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import { readSelectedSymptoms, saveSelectedSymptoms } from '../utils/bodyMapStorage'
-import { InteractiveBodyMap, type BodyRegion } from './InteractiveBodyMap'
+import { InteractiveBodyMap, type BodyMapGender, type BodyRegion } from './InteractiveBodyMap'
 
 const api = axios.create({ baseURL: 'http://localhost:5000/api', withCredentials: true })
 
 type SymptomAction = 'rule' | 'ai'
 
 export function BodyMapScreen() {
+  const [gender, setGender] = useState<BodyMapGender>('male')
   const [age, setAge] = useState('')
   const [selectedRegions, setSelectedRegions] = useState<BodyRegion[]>([])
   const [freeText, setFreeText] = useState('')
@@ -115,6 +116,27 @@ export function BodyMapScreen() {
         <div className="mt-8 grid gap-8 lg:grid-cols-[1.15fr_0.85fr]">
           <div>
             <div className="rounded-3xl border border-[#E1F5EE] bg-[#F7F9F8] p-4 shadow-sm">
+              <fieldset className="mb-4">
+                <legend className="mb-2 text-sm font-medium text-[#1E5B8C]">Select body type</legend>
+                <div className="flex gap-2" role="group" aria-label="Select body type">
+                  {(['male', 'female'] as BodyMapGender[]).map((option) => (
+                    <button
+                      key={option}
+                      type="button"
+                      onClick={() => setGender(option)}
+                      aria-pressed={gender === option}
+                      className={`rounded-2xl border px-4 py-2 text-sm font-medium capitalize transition ${
+                        gender === option
+                          ? 'border-[#0F6E56] bg-[#0F6E56] text-white'
+                          : 'border-[#1E5B8C] bg-white text-[#1E5B8C] hover:bg-[#E1F5EE]'
+                      }`}
+                    >
+                      {option}
+                    </button>
+                  ))}
+                </div>
+              </fieldset>
+
               <div className="grid gap-4 md:grid-cols-1">
                 <label className="space-y-2 text-sm font-medium text-[#1E5B8C]">
                   <span>Age (optional)</span>
@@ -137,6 +159,7 @@ export function BodyMapScreen() {
 
             <div className="mt-4">
               <InteractiveBodyMap
+                gender={gender}
                 selectedRegions={selectedRegions}
                 onSelectRegion={setSelectedRegions}
               />

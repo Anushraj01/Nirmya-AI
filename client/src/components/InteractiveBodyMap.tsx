@@ -181,12 +181,15 @@ const REGION_ID_TO_NAME: Record<string, string> = {
   'b-left-foot': 'Left Foot (Back)', 'b-right-foot': 'Right Foot (Back)'
 }
 
+export type BodyMapGender = 'male' | 'female'
+
 interface InteractiveBodyMapProps {
   onSelectRegion?: (regions: BodyRegion[]) => void
   selectedRegions?: BodyRegion[]
+  gender?: BodyMapGender
 }
 
-export function InteractiveBodyMap({ onSelectRegion, selectedRegions: _props = [] }: InteractiveBodyMapProps) {
+export function InteractiveBodyMap({ onSelectRegion, selectedRegions: _props = [], gender = 'male' }: InteractiveBodyMapProps) {
   const [currentView, setCurrentView] = useState<'front' | 'back'>('front')
   const [selections, setSelections] = useState<Map<string, SelectionEntry>>(new Map())
   const [activeSelectionKey, setActiveSelectionKey] = useState<string | null>(null)
@@ -200,7 +203,11 @@ export function InteractiveBodyMap({ onSelectRegion, selectedRegions: _props = [
   const [toast, setToast] = useState<string | null>(null)
 
   const pathDict = currentView === 'front' ? SVG_PATHS.front : SVG_PATHS.back
-  const imgSrc = currentView === 'front' ? '/front-m.webp' : '/back-m.webp'
+  const imageSources = {
+    male: { front: '/front-m.webp', back: '/back-m.webp' },
+    female: { front: '/front-f.webp', back: '/back-f.webp' },
+  } as const
+  const imgSrc = imageSources[gender][currentView]
 
   const showToast = (msg: string) => {
     setToast(msg)

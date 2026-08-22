@@ -657,9 +657,348 @@
     'Right Foot (Back)': ['Pain', 'Swelling', 'Tenderness', 'Tightness', 'Achilles Tendinitis', 'Heel Pain', 'Plantar Fasciitis', 'Posterior Ankle Pain', 'Achilles Tightness'],
   };
 
+  const SIMPLE_SYMPTOMS = {
+    'BPH': 'Trouble starting or keeping urine flowing',
+    'Benign Prostatic Hyperplasia': 'Enlarged prostate causing urine problems',
+    'Prostate Pain': 'Pain near the prostate area',
+    'Prostatitis': 'Pain or burning near the prostate area',
+    'Acute Prostatitis': 'Sudden pain or burning near the prostate area',
+    'Chronic Prostatitis': 'Long-lasting pain near the prostate area',
+    'Prostate Cancer': 'Prostate concern',
+    'Testicular Pain': 'Pain in the testicle',
+    'Orchitis': 'Painful or swollen testicle',
+    'Epididymitis': 'Pain or swelling behind the testicle',
+    'Testicular Torsion': 'Sudden severe testicle pain or swelling',
+    'Gynecomastia': 'Swelling or tenderness in breast tissue',
+    'Fibrocystic Changes': 'Lumpy or tender breast tissue',
+    'Fibroadenoma': 'Smooth breast lump',
+    'Phyllodes Tumor': 'Fast-growing breast lump',
+    'Intraductal Papilloma': 'Nipple lump or unexpected discharge',
+    'Fat Necrosis': 'Firm breast lump after an injury',
+    'Mastitis': 'Painful, red, swollen breast',
+    'Breast Abscess': 'Painful lump with pus in the breast',
+    'Pectoralis Major Strain': 'Pulled chest muscle',
+    'Pectoralis Minor Strain': 'Pulled muscle under the chest',
+    'Pectoralis Rupture': 'Torn chest muscle',
+    'Fibroid': 'Non-cancerous growth in the womb',
+    'Ovarian Cyst': 'Fluid-filled sac near an ovary',
+    'Endometriosis': 'Pelvic pain linked to womb tissue',
+    'Pelvic Inflammatory Disease': 'Pelvic infection pain',
+    'Period Pain': 'Painful menstrual cramps',
+    'Heavy Period Bleeding': 'Unusually heavy menstrual bleeding',
+    'Irregular Periods': 'Periods that are early, late, or unpredictable',
+    'Vaginal Discharge': 'Unusual vaginal discharge',
+    'Vaginal Itching': 'Itching around the vagina',
+    'Vaginal Bleeding': 'Unexpected vaginal bleeding',
+    'Pain During Sex': 'Pain during sexual activity',
+    'Pregnancy-related Pelvic Pain': 'Pelvic pain during pregnancy',
+    'Pregnancy-related Back Pain': 'Back pain during pregnancy',
+    'Breast Tenderness': 'Tender or sensitive breasts',
+    'Nipple Discharge': 'Unexpected fluid from the nipple',
+    'Pain (Otalgia)': 'Ear pain',
+    'Erythema': 'Redness',
+    'Edema': 'Swelling or puffiness',
+    'Ecchymosis (Bruising)': 'Bruising',
+    'Epistaxis (Nosebleed)': 'Nosebleed',
+    'Anosmia (Loss of Smell)': 'Loss of smell',
+    'Hyposmia (Decreased Smell)': 'Reduced sense of smell',
+    'Parosmia (Distorted Smell)': 'Smells seem different or wrong',
+    'Deviated Septum': 'Nose shape makes breathing difficult',
+    'Otitis Externa (Swimmer\'s Ear)': 'Outer ear infection',
+    'Otitis Media (Acute)': 'Middle ear infection',
+    'Otitis Media (Chronic)': 'Long-lasting middle ear infection',
+    'Eustachian Tube Dysfunction': 'Blocked or popping ears',
+    'Barotrauma': 'Ear pain from pressure changes',
+    'Sudden Sensorineural Hearing Loss (SSHL)': 'Sudden hearing loss',
+    'Conductive Hearing Loss': 'Muffled hearing',
+    'Mixed Hearing Loss': 'Muffled hearing with nerve-related hearing loss',
+    'Tinnitus Pulsatile': 'Pulsing or beating sound in the ear',
+    'Tinnitus Non-pulsatile': 'Ringing or buzzing in the ear',
+    'Benign Paroxysmal Positional Vertigo (BPPV)': 'Spinning when moving your head',
+    'Ménière Syndrome': 'Dizziness with ringing or hearing changes',
+    'Corneal Abrasion': 'Scratch on the clear front of the eye',
+    'Corneal Ulcer': 'Sore on the clear front of the eye',
+    'Keratitis': 'Inflamed clear front of the eye',
+    'Uveitis': 'Inflammation inside the eye',
+    'Iritis': 'Inflammation of the colored part of the eye',
+    'Scleritis': 'Painful inflammation of the white of the eye',
+    'Acute Angle Closure Glaucoma': 'Sudden severe eye pain with blurred vision',
+    'Open Angle Glaucoma': 'Slowly worsening eye pressure problem',
+    'Ocular Hypertension': 'High pressure inside the eye',
+    'Diplopia (Double Vision)': 'Double vision',
+    'Photophobia (Light Sensitivity)': 'Sensitivity to light',
+    'Hemianopsia': 'Loss of vision on one side',
+    'Myopia (Nearsightedness)': 'Difficulty seeing far away',
+    'Hyperopia (Farsightedness)': 'Difficulty seeing close up',
+    'Asthenopia': 'Tired or strained eyes',
+    'Convergence Insufficiency': 'Eyes struggle to work together',
+    'Lateral Epicondylitis': 'Tennis elbow pain',
+    'Medial Epicondylitis': 'Golfer\'s elbow pain',
+    'Carpal Tunnel Syndrome': 'Numbness or tingling in the hand',
+    'De Quervain Tenosynovitis': 'Pain near the thumb-side wrist',
+    'Meralgia Paresthetica': 'Burning or numbness on the outer thigh',
+    'Femoroacetabular Impingement': 'Hip pain when moving',
+    'Patellofemoral Pain Syndrome': 'Pain around the kneecap',
+    'Chondromalacia Patellae': 'Soft or damaged cartilage under kneecap',
+    'Iliotibial Band Syndrome': 'Pain on the outside of the knee or thigh',
+    'Deep Vein Thrombosis': 'Blood clot in a deep vein',
+    'Plantar Fasciitis': 'Heel or sole pain, especially on first steps',
+    'Morton Neuroma': 'Burning pain between the toes',
+    'Hallux Valgus (Bunion)': 'Bunion or bump at the big toe',
+    'Hallux Rigidus': 'Stiff big toe',
+    'Tarsal Tunnel Syndrome': 'Numbness or burning in the foot',
+    'Sacroiliitis': 'Pain where the lower back meets the pelvis',
+    'Coccygodynia': 'Tailbone pain',
+    'Piriformis Syndrome': 'Buttock pain that may travel down the leg',
+    'Sciatic Nerve Compression': 'Pain traveling from the back into the leg',
+    'Cervical Radiculopathy': 'Neck pain traveling into the arm',
+    'Lumbar Radiculopathy': 'Lower back pain traveling into the leg',
+    'Spinal Stenosis': 'Narrowing around the spinal nerves',
+    'Disc Herniation': 'Bulging disc pressing on a nerve',
+    'Spondylolisthesis': 'One spine bone slipping forward',
+    'Ankylosing Spondylitis': 'Long-term stiffness in the spine',
+    'Costochondritis': 'Pain where the ribs meet the breastbone',
+    'Pericarditis': 'Inflammation around the heart',
+    'Myocardial Infarction': 'Heart attack',
+    'Acute Coronary Syndrome': 'Possible heart attack symptoms',
+    'Angina Pectoris': 'Chest pain caused by reduced heart blood flow',
+    'Pulmonary Embolism': 'Blood clot affecting the lungs',
+    'Pneumothorax': 'Collapsed lung',
+    'GERD': 'Stomach acid coming up into the throat',
+    'Gastritis': 'Irritated stomach lining',
+    'Pancreatitis': 'Inflamed pancreas',
+    'Cholecystitis': 'Inflamed gallbladder',
+    'Cholelithiasis': 'Gallstones',
+    'Nephrolithiasis': 'Kidney stones',
+    'Pyelonephritis': 'Kidney infection',
+    'Appendicitis': 'Inflamed appendix',
+    'Diverticulitis': 'Inflamed pockets in the bowel',
+    'Ulcerative Colitis': 'Long-term inflammation of the bowel',
+    'Crohn Disease': 'Long-term inflammation anywhere in the digestive tract',
+    'Osteoarthritis': 'Wear-and-tear joint pain',
+    'Rheumatoid Arthritis': 'Immune system causing painful swollen joints',
+    'Osteomyelitis': 'Bone infection',
+    'Avascular Necrosis': 'Bone damage from reduced blood supply',
+    'Tendinopathy': 'Tendon pain or damage',
+    'Tendinitis': 'Inflamed tendon',
+    'Bursitis': 'Inflamed fluid-filled cushion near a joint',
+    'Osgood-Schlatter Disease': 'Painful bump below the kneecap',
+    'Baker Cyst': 'Fluid-filled lump behind the knee',
+    'Haglund Deformity': 'Hard bump at the back of the heel',
+    'Mastoiditis': 'Infection in the bone behind the ear',
+    'Lymphadenitis': 'Swollen, painful lymph nodes',
+    'Lymphadenopathy': 'Swollen lymph nodes',
+    'Cellulitis': 'Skin infection',
+    'Folliculitis': 'Infected hair follicles',
+    'Candidiasis': 'Fungal infection',
+    'Psoriasis': 'Thick, scaly skin patches',
+    'Eczema': 'Dry, itchy, inflamed skin',
+    'Seborrheic Dermatitis': 'Greasy, flaky skin rash',
+    'Rosacea': 'Facial redness and bumps',
+    'Melanoma': 'Concerning dark skin growth',
+    'Squamous Cell Carcinoma': 'Concerning scaly skin growth',
+    'Basal Cell Carcinoma': 'Concerning skin growth',
+    'Fracture': 'Broken bone',
+    'Dislocation': 'Joint moved out of place',
+    'Subluxation': 'Partly moved-out-of-place joint',
+    'Crepitus': 'Crackling or grinding feeling',
+    'Torticollis (Wry Neck)': 'Neck stuck or tilted to one side',
+    'Myofascial Pain Syndrome': 'Painful tight muscles',
+    'Bruxism (Teeth Grinding)': 'Teeth grinding or jaw clenching',
+    'Temporomandibular Joint Dysfunction': 'Jaw joint pain or trouble moving',
+    'Trismus': 'Difficulty opening the mouth',
+    'Gingivitis': 'Red, swollen, or bleeding gums',
+    'Periodontitis': 'Advanced gum disease',
+    'Periapical Abscess': 'Pus-filled infection near a tooth root',
+    'Caries (Cavities)': 'Tooth cavity or decay',
+    'Dental Caries': 'Tooth decay',
+    'Cystitis': 'Bladder infection or irritation',
+    'Interstitial Cystitis': 'Long-lasting bladder pain or pressure',
+    'Bladder Cancer': 'Concerning bladder growth',
+    'Urinary Retention': 'Unable to empty the bladder fully',
+    'Urinary Incontinence': 'Leaking urine or loss of bladder control',
+    'CPPS': 'Long-lasting pelvic pain',
+    'Diverticulosis': 'Small pockets in the bowel wall',
+    'Colitis': 'Inflamed bowel causing pain or loose stools',
+    'IBS': 'Sensitive bowel with pain, bloating, or stool changes',
+    'Colon Cancer': 'Concerning bowel growth',
+    'Colorectal Cancer': 'Concerning bowel growth',
+    'Hepatitis': 'Inflamed liver',
+    'Cirrhosis': 'Liver scarring',
+    'Fatty Liver': 'Fat buildup in the liver',
+    'Pancreatic Cancer': 'Concerning pancreas growth',
+    'Gallstone Ileus': 'Gallstone blocking the bowel',
+    'Cholangitis': 'Bile duct infection',
+    'Biliary Colic': 'Cramping pain from gallstones',
+    'Kidney Stone': 'Kidney stone pain',
+    'Renal Abscess': 'Pus-filled kidney infection',
+    'Polycystic Kidney Disease': 'Multiple cysts in the kidneys',
+    'Umbilical Hernia': 'Bulge near the belly button',
+    'Hernia': 'Bulge caused by tissue pushing through',
+    'Inguinal Hernia': 'Bulge in the groin',
+    'Femoral Hernia': 'Bulge near the upper thigh',
+    'Sports Hernia': 'Groin pain from a torn muscle or tendon',
+    'Lymphadenitis': 'Swollen, painful lymph nodes',
+    'Lymph Node Swelling': 'Swollen lymph nodes',
+    'Lymphadenopathy': 'Swollen lymph nodes',
+    'Femoroacetabular Impingement': 'Hip pinching pain when moving',
+    'Labral Tear': 'Torn cushioning tissue in the joint',
+    'Avascular Necrosis': 'Bone damage from reduced blood supply',
+    'Slipped Capital Femoral Epiphysis': 'Hip problem from a shifted growth area',
+    'Patellofemoral Osteoarthritis': 'Wear-and-tear pain around the kneecap',
+    'Meniscal Tear': 'Torn knee cushion',
+    'Medial Meniscus Tear': 'Torn inner knee cushion',
+    'Lateral Meniscus Tear': 'Torn outer knee cushion',
+    'Anterior Cruciate Ligament Tear': 'Torn front knee ligament',
+    'Posterior Cruciate Ligament Tear': 'Torn back knee ligament',
+    'Medial Collateral Ligament Tear': 'Torn inner knee ligament',
+    'Lateral Collateral Ligament Tear': 'Torn outer knee ligament',
+    'Tibial Stress Fracture': 'Small crack from repeated stress in the shin',
+    'Fibular Fracture': 'Broken outer lower-leg bone',
+    'Tibial Fracture': 'Broken shin bone',
+    'Ankle Sprain': 'Stretched or torn ankle ligament',
+    'Lisfranc Injury': 'Midfoot ligament or bone injury',
+    'Metatarsalgia': 'Pain in the ball of the foot',
+    'Morton Neuroma': 'Burning pain between the toes',
+    'Sesamoiditis': 'Pain under the big toe',
+    'Coccyx Fracture': 'Broken tailbone',
+    'Pilonidal Cyst': 'Painful cyst near the tailbone',
+    'Sacroiliac Joint Dysfunction': 'Pain where the lower back meets the pelvis',
+    'Facet Joint Syndrome': 'Pain from small joints in the spine',
+    'Cauda Equina Syndrome': 'Severe pressure on nerves at the bottom of the spine',
+    'Spondylolisthesis': 'One spine bone slipping forward',
+    'Kyphosis': 'Forward curve of the upper spine',
+    'Scoliosis': 'Sideways curve of the spine',
+    'Thoracic Radiculopathy': 'Mid-back pain traveling around the ribs',
+    'Cervical Radiculopathy': 'Neck pain traveling into the arm',
+    'Lumbar Radiculopathy': 'Lower-back pain traveling into the leg',
+    'Thoracic Outlet Syndrome': 'Nerve or blood-vessel pressure near the shoulder',
+    'Carpal Tunnel Syndrome': 'Numbness or tingling in the hand',
+    'Cubital Tunnel Syndrome': 'Numbness or tingling near the elbow and little finger',
+    'Pronator Teres Syndrome': 'Forearm pain with hand tingling',
+    'De Quervain Tenosynovitis': 'Pain near the thumb-side wrist',
+    'Osgood-Schlatter Disease': 'Painful bump below the kneecap',
+    'Achilles Tendinopathy': 'Pain or damage in the heel tendon',
+    'Retrocalcaneal Bursitis': 'Painful swelling behind the heel',
+    'Haglund Deformity': 'Hard bump at the back of the heel',
+    'Tarsal Tunnel Syndrome': 'Numbness or burning in the foot',
+    'Plantar Fasciitis': 'Heel or sole pain, especially on first steps',
+    'Hallux Rigidus': 'Stiff big toe',
+    'Hallux Limitus': 'Limited movement of the big toe',
+    'Rheumatoid Arthritis': 'Immune system causing painful swollen joints',
+    'Psoriatic Arthritis': 'Swollen joints linked to psoriasis',
+    'Gout': 'Sudden red, hot, very painful joint',
+    'Costochondritis': 'Pain where the ribs meet the breastbone',
+    'Pleurisy': 'Sharp pain when taking a breath',
+    'Pneumonia': 'Lung infection with cough or breathing trouble',
+    'Pulmonary Embolism': 'Blood clot affecting the lungs',
+    'Pneumothorax': 'Collapsed lung',
+    'Pericarditis': 'Inflammation around the heart',
+    'Myocardial Infarction Pain': 'Heart attack symptoms',
+    'Angina Pectoris': 'Chest pain caused by reduced heart blood flow',
+    'GERD': 'Stomach acid coming up into the throat',
+    'Peptic Ulcer': 'Sore in the stomach or upper bowel',
+    'Gastric Ulcer': 'Sore in the stomach lining',
+    'Duodenal Ulcer': 'Sore in the upper bowel',
+    'Acute Pancreatitis': 'Sudden inflammation of the pancreas',
+    'Chronic Pancreatitis': 'Long-lasting pancreas inflammation',
+    'Cholecystitis': 'Inflamed gallbladder',
+    'Cholelithiasis': 'Gallstones',
+    'Nephrolithiasis': 'Kidney stones',
+    'Pyelonephritis': 'Kidney infection',
+    'Acute Pyelonephritis': 'Sudden kidney infection',
+    'Appendicitis': 'Inflamed appendix',
+    'Diverticulitis': 'Inflamed pockets in the bowel',
+    'Ulcerative Colitis': 'Long-term inflammation of the bowel',
+    'Crohn Disease': 'Long-term inflammation in the digestive tract',
+    'Dysphagia': 'Difficulty swallowing',
+    'Odynophagia (Painful Swallowing)': 'Pain when swallowing',
+    'Laryngitis': 'Hoarse or lost voice',
+    'Pharyngitis': 'Sore, inflamed throat',
+    'Epiglottitis': 'Severe swelling near the airway',
+    'Stridor': 'High-pitched noisy breathing',
+    'Dyspnea': 'Difficulty breathing',
+    'Tachypnea': 'Fast breathing',
+    'Hemoptysis': 'Coughing up blood',
+    'Palpitations': 'Pounding or racing heartbeat',
+    'Arrhythmia': 'Irregular heartbeat',
+    'Syncope': 'Fainting or blacking out',
+    'Vertigo': 'Spinning or room-moving feeling',
+    'Paresthesia': 'Tingling or pins and needles',
+    'Allodynia': 'Pain from a light touch',
+    'Hyperesthesia': 'Unusually sensitive feeling',
+    'Hypoesthesia': 'Reduced feeling or numbness',
+    'Radiculopathy': 'Pain, tingling, or weakness from a pinched nerve',
+    'Myelopathy': 'Spinal cord pressure symptoms',
+    'Spondylosis': 'Age-related spine wear',
+  };
+
+  const FEMALE_ONLY_SYMPTOMS = new Set([
+    'Fibroid', 'Ovarian Cyst', 'Endometriosis', 'Pelvic Inflammatory Disease',
+    'Period Pain', 'Heavy Period Bleeding', 'Irregular Periods', 'Vaginal Discharge',
+    'Vaginal Itching', 'Vaginal Bleeding', 'Pain During Sex', 'Pregnancy-related Pelvic Pain',
+    'Pregnancy-related Back Pain', 'Breast Tenderness'
+  ]);
+
+  const MALE_ONLY_SYMPTOMS = new Set([
+    'Prostate Pain', 'Prostatitis', 'Acute Prostatitis', 'Chronic Prostatitis',
+    'Benign Prostatic Hyperplasia', 'BPH', 'Prostate Cancer', 'Testicular Pain',
+    'Orchitis', 'Epididymitis', 'Testicular Torsion', 'Gynecomastia'
+  ]);
+
+  const GENDER_SYMPTOMS_BY_REGION = {
+    'Lower Abdomen (Hypogastric)': {
+      female: ['Period Pain', 'Heavy Period Bleeding', 'Irregular Periods', 'Ovarian Cyst', 'Endometriosis', 'Vaginal Discharge', 'Vaginal Itching', 'Vaginal Bleeding', 'Pain During Sex', 'Pregnancy-related Pelvic Pain'],
+      male: ['Prostate Pain', 'Prostatitis', 'Trouble urinating', 'Testicular Pain', 'Pain when ejaculating']
+    },
+    'Groin (Left)': {
+      female: ['Ovarian Cyst', 'Endometriosis', 'Pelvic Inflammatory Disease', 'Vaginal Discharge', 'Vaginal Itching', 'Vaginal Bleeding', 'Pain During Sex'],
+      male: ['Testicular Pain', 'Epididymitis', 'Testicular Torsion', 'Prostatitis', 'Pain when ejaculating']
+    },
+    'Groin (Right)': {
+      female: ['Ovarian Cyst', 'Endometriosis', 'Pelvic Inflammatory Disease', 'Vaginal Discharge', 'Vaginal Itching', 'Vaginal Bleeding', 'Pain During Sex'],
+      male: ['Testicular Pain', 'Epididymitis', 'Testicular Torsion', 'Prostatitis', 'Pain when ejaculating']
+    },
+    'Pubic Region': {
+      female: ['Period Pain', 'Ovarian Cyst', 'Endometriosis', 'Pelvic Inflammatory Disease', 'Pregnancy-related Pelvic Pain', 'Vaginal Bleeding', 'Pain During Sex'],
+      male: ['Prostate Pain', 'Prostatitis', 'Testicular Pain', 'Pain when ejaculating']
+    }
+  };
+
+  function getSimpleSymptom(symptom) {
+    if (SIMPLE_SYMPTOMS[symptom]) return SIMPLE_SYMPTOMS[symptom];
+
+    return symptom
+      .replace(/\s*\([^)]*\)/g, '')
+      .replace(/\b(acute|chronic|primary|secondary|non-toxic|toxic|unilateral|bilateral)\b/gi, '')
+      .replace(/\bsyndrome\b/gi, 'problem')
+      .replace(/\bneuralgia\b/gi, 'nerve pain')
+      .replace(/\bneuropathy\b/gi, 'nerve pain')
+      .replace(/\bneoplasm\b/gi, 'growth')
+      .replace(/\bpathology\b/gi, 'problem')
+      .replace(/\bcompression\b/gi, 'pressure')
+      .replace(/\bimpingement\b/gi, 'pinching')
+      .replace(/\bfracture\b/gi, 'broken bone')
+      .replace(/\bdislocation\b/gi, 'joint out of place')
+      .replace(/\bparesthesia\b/gi, 'tingling')
+      .replace(/\btendinopathy\b/gi, 'tendon pain or damage')
+      .replace(/\btendinitis\b/gi, 'inflamed tendon')
+      .replace(/\barthritis\b/gi, 'joint inflammation')
+      .replace(/\bsyphilis\b/gi, 'syphilis infection')
+      .replace(/\s{2,}/g, ' ')
+      .trim();
+  }
+
+  function isAvailableForGender(symptom) {
+    if (state.gender === 'female' && MALE_ONLY_SYMPTOMS.has(symptom)) return false;
+    if (state.gender === 'male' && FEMALE_ONLY_SYMPTOMS.has(symptom)) return false;
+    return true;
+  }
+
   // ── State ──────────────────────────────────────────────────────
   const state = {
     currentView: 'front',
+    gender: 'male',
     // key: "f-head::Forehead" or "f-head"
     selections: new Map(), // key -> { regionId, parentRegion, subRegion, side, severity, note }
     activeSelectionKey: null,
@@ -679,8 +1018,13 @@
     btnFront: $('#btn-front'),
     btnBack: $('#btn-back'),
     toggleIndicator: $('.toggle-indicator'),
+    genderToggle: $('#gender-toggle'),
+    btnMale: $('#btn-male'),
+    btnFemale: $('#btn-female'),
     bodyFront: $('#body-front'),
     bodyBack: $('#body-back'),
+    frontImage: $('#front-image'),
+    backImage: $('#back-image'),
     tooltip: $('#tooltip'),
     tooltipText: $('#tooltip-text'),
     zoomHeader: $('#zoom-header'),
@@ -721,6 +1065,9 @@
   // ── Init ───────────────────────────────────────────────────────
   function init() {
     bindViewToggle();
+    bindGenderToggle();
+    const requestedGender = new URLSearchParams(window.location.search).get('gender');
+    if (requestedGender === 'female' || requestedGender === 'male') switchGender(requestedGender);
     bindSVGRegionEvents();
     bindZoomHeader();
     bindSeverity();
@@ -733,6 +1080,26 @@
   function bindViewToggle() {
     dom.btnFront.addEventListener('click', () => switchView('front'));
     dom.btnBack.addEventListener('click', () => switchView('back'));
+  }
+
+  function bindGenderToggle() {
+    dom.btnMale.addEventListener('click', () => switchGender('male'));
+    dom.btnFemale.addEventListener('click', () => switchGender('female'));
+  }
+
+  function switchGender(gender) {
+    state.gender = gender;
+    const sources = gender === 'female'
+      ? { front: '../front-f.webp', back: '../back-f.webp' }
+      : { front: 'front-m.webp', back: 'back-m.webp' };
+
+    dom.frontImage.setAttribute('href', sources.front);
+    dom.frontImage.setAttribute('xlink:href', sources.front);
+    dom.backImage.setAttribute('href', sources.back);
+    dom.backImage.setAttribute('xlink:href', sources.back);
+    dom.btnMale.classList.toggle('active', gender === 'male');
+    dom.btnFemale.classList.toggle('active', gender === 'female');
+    dom.genderToggle.querySelector('.toggle-indicator').classList.toggle('right', gender === 'female');
   }
 
   function switchView(view) {
@@ -1875,17 +2242,21 @@
     const { subRegionName } = state.drawerContext || {};
     if (!subRegionName) return;
 
-    const allSymptoms = REGION_SYMPTOMS[subRegionName] || [];
+    const extraSymptoms = GENDER_SYMPTOMS_BY_REGION[subRegionName]?.[state.gender] || [];
+    const allSymptoms = [...new Set([...(REGION_SYMPTOMS[subRegionName] || []), ...extraSymptoms])]
+      .filter(isAvailableForGender);
     const searchQuery = dom.symptomSearch.value.toLowerCase().trim();
-    const filtered = allSymptoms.filter((s) => s.toLowerCase().includes(searchQuery));
+    const filtered = allSymptoms
+      .map((symptom) => ({ value: symptom, label: getSimpleSymptom(symptom) }))
+      .filter(({ label }) => label.toLowerCase().includes(searchQuery));
 
     let html = '';
-    filtered.forEach((symptom) => {
-      const isChecked = state.selectedSymptoms.has(symptom);
+    filtered.forEach(({ value, label }) => {
+      const isChecked = state.selectedSymptoms.has(value);
       html += `
         <label class="symptom-item ${isChecked ? 'checked' : ''}">
-          <input type="checkbox" value="${symptom}" ${isChecked ? 'checked' : ''} />
-          <label>${symptom}</label>
+          <input type="checkbox" value="${value.replace(/"/g, '&quot;')}" ${isChecked ? 'checked' : ''} />
+          <span>${label}</span>
         </label>`;
     });
 
@@ -1919,7 +2290,7 @@
     const key = `${regionId}::${subRegionName}`;
 
     // Store symptoms and severity in the selection
-    const symptoms = Array.from(state.selectedSymptoms);
+    const symptoms = Array.from(state.selectedSymptoms).map(getSimpleSymptom);
     state.selections.set(key, {
       regionId,
       parentRegion: parentRegionName,

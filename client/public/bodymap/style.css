@@ -256,6 +256,10 @@ body {
   margin-bottom: 16px;
 }
 
+#gender-toggle[hidden] {
+  display: none !important;
+}
+
 .toggle-btn {
   position: relative;
   z-index: 1;
