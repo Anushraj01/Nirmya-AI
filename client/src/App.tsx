@@ -6,6 +6,7 @@ import { MedicalHistoryForm } from './components/MedicalHistoryForm'
 import { BodyMapScreen } from './components/BodyMapScreen'
 import { RecommendationScreen } from './components/RecommendationScreen'
 import { DoctorDiscoveryPage } from './components/DoctorDiscoveryPage'
+import SymptomChat from './SymptomChat'
 
 type Role = 'Patient' | 'Doctor'
 
@@ -506,6 +507,7 @@ function AppRoutes() {
         <Route path="/unauthorized" element={<UnauthorizedPage />} />
         <Route element={<ProtectedRoute allowedRoles={['Patient']} />}>
           <Route path="/patient" element={<PatientPage />} />
+          <Route path="/symptom-chat" element={<SymptomChat />} />
           <Route path="/patient/symptom-checker" element={<BodyMapScreen />} />
           <Route path="/patient/symptom-checker/body-map" element={<BodyMapScreen />} />
           <Route path="/patient/symptom-checker/recommendation" element={<RecommendationScreen />} />

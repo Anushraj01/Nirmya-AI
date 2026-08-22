@@ -946,6 +946,121 @@
     'Orchitis', 'Epididymitis', 'Testicular Torsion', 'Gynecomastia'
   ]);
 
+  // These are patient-observable descriptions, not diagnoses. They are
+  // combined with the region's clinical source list before rendering.
+  const PLAIN_SYMPTOM_BANKS = {
+    general: [
+      'Aching', 'Sharp pain', 'Dull pain', 'Burning feeling', 'Stinging feeling', 'Throbbing',
+      'Cramping', 'Tightness', 'Pressure', 'Heaviness', 'Tender to touch', 'Sensitive to touch',
+      'Numbness', 'Tingling', 'Pins and needles', 'Electric-shock feeling', 'Itching', 'Rash',
+      'Redness', 'Warmth', 'Feeling cold', 'Swelling', 'Puffiness', 'Bruising', 'Skin color change',
+      'Weakness', 'Shaking', 'Twitching', 'Muscle spasm', 'Muscle cramp', 'Stiffness',
+      'Trouble moving', 'Pain with movement', 'Pain at rest', 'Pain at night', 'Pain after activity',
+      'Pain after an injury', 'Pain getting worse', 'Pain coming and going', 'Pain spreading nearby',
+      'Pain that wakes me up', 'Loss of feeling', 'More sensitive than usual', 'Less sensitive than usual',
+      'A visible lump', 'A hard area', 'A soft area', 'A feeling of fullness', 'Different from the other side'
+    ],
+    muscle: [
+      'Sore muscle', 'Pulled muscle feeling', 'Muscle feels tight', 'Muscle feels weak', 'Muscle fatigue',
+      'Muscle knot', 'Muscle twitching', 'Muscle shaking', 'Muscle cramp', 'Muscle spasm', 'Muscle fluttering',
+      'Pain when stretching', 'Pain when lifting', 'Pain when reaching', 'Pain when bending', 'Pain when walking',
+      'Pain after exercise', 'Pain after sitting', 'Pain after standing', 'Pain after repeated use',
+      'Reduced strength', 'Unable to use normally', 'Muscle feels swollen', 'Muscle feels bruised',
+      'Muscle tightness spreading nearby', 'Tender spot in the muscle', 'Muscle giving way', 'Muscle fatigue quickly',
+      'Difficulty relaxing the muscle', 'Stiff after resting', 'Limited flexibility', 'Visible muscle change'
+    ],
+    joint: [
+      'Joint pain', 'Joint stiffness', 'Joint swelling', 'Joint warmth', 'Joint redness', 'Joint tenderness',
+      'Clicking sound', 'Popping sound', 'Grinding feeling', 'Catching feeling', 'Joint locking', 'Joint giving way',
+      'Joint feels loose', 'Joint feels out of place', 'Trouble bending', 'Trouble straightening', 'Reduced movement',
+      'Pain when climbing stairs', 'Pain when standing up', 'Pain when sitting down', 'Pain when gripping',
+      'Pain when turning', 'Pain after activity', 'Pain in the morning', 'Stiffness after resting',
+      'Swelling after activity', 'Tender around the joint', 'Weakness around the joint', 'Unsteady movement',
+      'Unable to put weight on it', 'A bump near the joint', 'Warm fluid-like swelling'
+    ],
+    nerve: [
+      'Numb patch', 'Tingling', 'Pins and needles', 'Burning nerve feeling', 'Electric-shock feeling',
+      'Shooting pain', 'Pain traveling along the limb', 'Pain traveling down the arm', 'Pain traveling down the leg',
+      'Pain spreading to nearby skin', 'Reduced feeling', 'Overly sensitive skin', 'Pain from light touch',
+      'It feels asleep', 'Weak grip', 'Weak foot or hand', 'Dropping things', 'Trouble coordinating movement',
+      'Balance feels worse', 'Muscle twitching', 'Muscle wasting', 'Cold feeling without cold skin',
+      'Hot feeling without hot skin', 'Crawling feeling', 'Buzzing feeling', 'Vibration feeling',
+      'Symptoms worse at night', 'Symptoms worse in one position', 'Symptoms after pressure', 'Sudden nerve pain'
+    ],
+    skin: [
+      'Dry skin', 'Oily skin', 'Itchy skin', 'Flaky skin', 'Scaly patch', 'Red patch', 'Dark patch', 'Light patch',
+      'Raised bump', 'Small bumps', 'Pus-filled bump', 'Blister', 'Large blister', 'Crack in the skin',
+      'Sore or open area', 'Scab', 'Bleeding spot', 'Bruise', 'Hives or welts', 'Burning skin', 'Raw skin',
+      'Peeling skin', 'Thickened skin', 'Hard skin', 'Soft skin swelling', 'Skin feels hot', 'Skin feels cold',
+      'Change in a mole', 'New mole or spot', 'Unusual skin growth', 'Hair loss in a patch', 'Ingrown hair',
+      'Pimple or breakout', 'Boil-like bump', 'Skin pain after a bite', 'Skin irritation after contact',
+      'Skin irritation after shaving', 'Slow-healing sore', 'Skin color not matching nearby skin', 'Scar or mark'
+    ],
+    head: [
+      'Headache', 'Pressure in the head', 'Pounding head pain', 'Pain on one side', 'Pain behind the eyes',
+      'Pain after stress', 'Pain after poor sleep', 'Pain after missing a meal', 'Pain with bright light',
+      'Pain with loud sounds', 'Dizziness', 'Spinning feeling', 'Lightheaded feeling', 'Feeling off balance',
+      'Nausea', 'Vomiting', 'Feeling faint', 'Trouble concentrating', 'Feeling confused', 'Memory difficulty',
+      'Blurred vision', 'Double vision', 'Seeing flashing lights', 'Seeing spots', 'Sensitivity to light',
+      'Sensitivity to sound', 'Sensitivity to smells', 'Face feels weak', 'Face feels numb', 'Face twitching',
+      'Scalp tenderness', 'Scalp itching', 'Hair thinning', 'Pressure around the sinuses', 'Blocked nose feeling',
+      'Runny nose', 'Nosebleed', 'Reduced smell', 'Ringing in the ear', 'Muffled hearing', 'Ear fullness'
+    ],
+    chest: [
+      'Chest pain', 'Chest pressure', 'Chest tightness', 'Burning in the chest', 'Pain when breathing in',
+      'Pain when coughing', 'Pain spreading to the arm', 'Pain spreading to the jaw', 'Pain spreading to the back',
+      'Shortness of breath', 'Breathing feels harder than usual', 'Fast breathing', 'Wheezing', 'Cough',
+      'Dry cough', 'Cough with mucus', 'Coughing up blood', 'Racing heartbeat', 'Pounding heartbeat',
+      'Fluttering heartbeat', 'Skipped heartbeat feeling', 'Feeling faint', 'Cold sweat', 'Unusual sweating',
+      'Sore chest muscles', 'Pain after lifting', 'Pain after coughing', 'Pain when touching the chest',
+      'Breast tenderness', 'Breast lump', 'Breast redness', 'Breast warmth', 'Unexpected nipple fluid',
+      'Rib tenderness', 'Rib pain after injury', 'Pain with twisting', 'Pain with deep breath', 'Feeling unable to take a full breath'
+    ],
+    abdomen: [
+      'Belly pain', 'Stomach ache', 'Cramping', 'Bloating', 'Feeling full quickly', 'Belly swelling', 'Gas pain',
+      'Heartburn', 'Burning after eating', 'Indigestion', 'Nausea', 'Vomiting', 'Loss of appetite',
+      'Constipation', 'Loose stools', 'Diarrhea', 'Urgent need to use the toilet', 'Mucus in stool',
+      'Blood in stool', 'Black stool', 'Pain after eating', 'Pain before a bowel movement', 'Pain relieved after stool',
+      'Pain on the right side', 'Pain on the left side', 'Pain around the belly button', 'Pain in the upper belly',
+      'Pain in the lower belly', 'Pain spreading to the back', 'Pain spreading to the shoulder', 'Tender belly',
+      'Hard or swollen belly', 'Unable to pass gas', 'Frequent burping', 'Unpleasant taste in the mouth',
+      'Yellow skin or eyes', 'Dark urine', 'Pale stool', 'Burning when urinating', 'Needing to urinate often',
+      'Trouble passing urine', 'Leaking urine', 'Blood in urine'
+    ],
+    pelvis: [
+      'Pelvic pain', 'Groin pain', 'Hip pain', 'Pressure in the pelvis', 'Lower belly cramps', 'Pain when walking',
+      'Pain when sitting', 'Pain when standing', 'Pain during sexual activity', 'Pain when urinating',
+      'Burning when urinating', 'Needing to urinate often', 'Sudden urge to urinate', 'Trouble starting urine',
+      'Unable to empty the bladder', 'Leaking urine', 'Blood in urine', 'Groin swelling', 'A groin lump',
+      'Hip stiffness', 'Hip clicking', 'Hip giving way', 'Pain spreading down the leg', 'Tailbone pain',
+      'Pain after falling', 'Pain during periods', 'Unexpected vaginal bleeding', 'Unusual vaginal discharge',
+      'Vaginal itching', 'Breast tenderness', 'Testicle pain', 'Testicle swelling', 'Pain near the prostate',
+      'Pain with ejaculation', 'Difficulty getting an erection', 'Painful bowel movement', 'Rectal bleeding'
+    ],
+    respiratory: [
+      'Shortness of breath', 'Breathing feels tight', 'Breathing feels shallow', 'Breathing feels fast',
+      'Wheezing', 'Whistling sound when breathing', 'Crackling sound when breathing', 'Cough', 'Dry cough',
+      'Cough with clear mucus', 'Cough with yellow mucus', 'Cough with green mucus', 'Coughing up blood',
+      'Chest tightness', 'Pain with deep breathing', 'Pain with coughing', 'Unable to lie flat comfortably',
+      'Waking up short of breath', 'Breathlessness with walking', 'Breathlessness at rest', 'Feeling of choking',
+      'Blocked nose', 'Runny nose', 'Post-nasal drip', 'Frequent throat clearing', 'Sore throat', 'Hoarse voice',
+      'Voice loss', 'Trouble swallowing', 'Pain when swallowing', 'Mucus in the throat'
+    ]
+  };
+
+  function getSymptomBankForRegion(subRegionName) {
+    const region = subRegionName.toLowerCase();
+    const banks = [PLAIN_SYMPTOM_BANKS.general];
+    if (/head|scalp|temple|eye|ear|nose|cheek|jaw|mouth|teeth|forehead/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.head);
+    if (/chest|breast|rib|sternum|collarbone/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.chest, PLAIN_SYMPTOM_BANKS.respiratory);
+    if (/abdomen|stomach|flank|navel|colon|appendix/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.abdomen);
+    if (/groin|pelvis|pubic|hip|sacral|tailbone|glute|buttock/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.pelvis);
+    if (/neck|spine|back|shoulder|scapula|paraspinal|trapezius/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.muscle, PLAIN_SYMPTOM_BANKS.nerve);
+    if (/arm|elbow|forearm|wrist|hand|finger|thigh|hamstring|knee|calf|shin|ankle|foot|toe/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.muscle, PLAIN_SYMPTOM_BANKS.joint, PLAIN_SYMPTOM_BANKS.nerve);
+    if (/skin|scalp|cheek|forehead|ear|nose|lip|mouth|hand|foot|toe/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.skin);
+    return [...new Set(banks.flat())];
+  }
+
   const GENDER_SYMPTOMS_BY_REGION = {
     'Lower Abdomen (Hypogastric)': {
       female: ['Period Pain', 'Heavy Period Bleeding', 'Irregular Periods', 'Ovarian Cyst', 'Endometriosis', 'Vaginal Discharge', 'Vaginal Itching', 'Vaginal Bleeding', 'Pain During Sex', 'Pregnancy-related Pelvic Pain'],
@@ -992,6 +1107,9 @@
   function isAvailableForGender(symptom) {
     if (state.gender === 'female' && MALE_ONLY_SYMPTOMS.has(symptom)) return false;
     if (state.gender === 'male' && FEMALE_ONLY_SYMPTOMS.has(symptom)) return false;
+    const plain = symptom.toLowerCase();
+    if (state.gender === 'female' && /prostate|testicle|ejaculat|erection/.test(plain)) return false;
+    if (state.gender === 'male' && /menstrual|period|ovary|vagina|pregnan|womb|breast tenderness/.test(plain)) return false;
     return true;
   }
 
@@ -2243,7 +2361,8 @@
     if (!subRegionName) return;
 
     const extraSymptoms = GENDER_SYMPTOMS_BY_REGION[subRegionName]?.[state.gender] || [];
-    const allSymptoms = [...new Set([...(REGION_SYMPTOMS[subRegionName] || []), ...extraSymptoms])]
+    const plainBank = getSymptomBankForRegion(subRegionName);
+    const allSymptoms = [...new Set([...plainBank, ...(REGION_SYMPTOMS[subRegionName] || []), ...extraSymptoms])]
       .filter(isAvailableForGender);
     const searchQuery = dom.symptomSearch.value.toLowerCase().trim();
     const filtered = allSymptoms
