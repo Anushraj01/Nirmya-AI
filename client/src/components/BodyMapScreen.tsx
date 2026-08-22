@@ -65,7 +65,6 @@ export function BodyMapScreen() {
     saveSelectedSymptoms({
       ...payload,
       freeText: freeText.trim(),
-      age: normalizedAge,
     })
 
     setIsLoading(true)

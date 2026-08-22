@@ -10,7 +10,8 @@ const router = Router()
 router.post('/recommend-symptoms', authenticateToken, requireRole(['Patient']), async (req, res, next) => {
   try {
     const { symptomsText, bodyRegion, selectedChips = [], age, gender, patientId } = req.body || {}
-    const combinedText = [symptomsText, bodyRegion, ...(Array.isArray(selectedChips) ? selectedChips : [])]
+    // Build combined text from symptoms and selected chips; bodyRegion is handled separately by evaluateRedFlagTriage
+    const combinedText = [symptomsText, ...(Array.isArray(selectedChips) ? selectedChips : [])]
       .filter((value): value is string => Boolean(value))
       .join(' ')
 
