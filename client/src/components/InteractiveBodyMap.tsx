@@ -183,6 +183,13 @@ const REGION_ID_TO_NAME: Record<string, string> = {
 
 export type BodyMapGender = 'male' | 'female'
 
+const BODY_CANVAS = {
+  male: { front: { width: 2037, height: 3681 }, back: { width: 2130, height: 3681 } },
+  female: { front: { width: 1764, height: 3633 }, back: { width: 1977, height: 3681 } },
+} as const
+
+type PathSet = Record<string, string>
+
 interface InteractiveBodyMapProps {
   onSelectRegion?: (regions: BodyRegion[]) => void
   selectedRegions?: BodyRegion[]
@@ -197,12 +204,44 @@ export function InteractiveBodyMap({ onSelectRegion, selectedRegions: _props = [
   const [zoomedRegion, setZoomedRegion] = useState<string | null>(null)
   const [tooltip, setTooltip] = useState<{ text: string; x: number; y: number } | null>(null)
   const [hotspots, setHotspots] = useState<Array<{ name: string; x: number; y: number; width: number; height: number }>>([])
-  const [viewBox, setViewBox] = useState<string>('0 0 2037 3681')
   const [showExportModal, setShowExportModal] = useState(false)
   const [exportJson, setExportJson] = useState<string>('')
   const [toast, setToast] = useState<string | null>(null)
+  const [femalePathSets, setFemalePathSets] = useState<{ front: PathSet; back: PathSet }>({ front: {}, back: {} })
 
-  const pathDict = currentView === 'front' ? SVG_PATHS.front : SVG_PATHS.back
+  useEffect(() => {
+    let cancelled = false
+
+    fetch('/findex.html')
+      .then(response => response.text())
+      .then(markup => {
+        if (cancelled) return
+        const document = new DOMParser().parseFromString(markup, 'text/html')
+        const pathSets: { front: PathSet; back: PathSet } = { front: {}, back: {} }
+
+        document.querySelectorAll('#front-regions path').forEach(path => {
+          if (path.id && path.getAttribute('d')) pathSets.front[path.id] = path.getAttribute('d')!
+        })
+        document.querySelectorAll('#back-regions path').forEach(path => {
+          if (path.id && path.getAttribute('d')) pathSets.back[path.id] = path.getAttribute('d')!
+        })
+
+        setFemalePathSets(pathSets)
+      })
+      .catch(() => undefined)
+
+    return () => {
+      cancelled = true
+    }
+  }, [])
+
+  const pathDict = gender === 'female'
+    ? (currentView === 'front' ? femalePathSets.front : femalePathSets.back)
+    : (currentView === 'front' ? SVG_PATHS.front : SVG_PATHS.back)
+  const canvas = BODY_CANVAS[gender][currentView]
+  const baseCanvas = BODY_CANVAS.male[currentView]
+  const pathScale = gender === 'female' ? undefined : `scale(${canvas.width / baseCanvas.width} ${canvas.height / baseCanvas.height})`
+  const viewBox = `0 0 ${canvas.width} ${canvas.height}`
   const imageSources = {
     male: { front: '/front-m.webp', back: '/back-m.webp' },
     female: { front: '/front-f.webp', back: '/back-f.webp' },
@@ -350,12 +389,12 @@ export function InteractiveBodyMap({ onSelectRegion, selectedRegions: _props = [
   const unzoomBody = () => {
     setZoomedRegion(null)
     setHotspots([])
-    setViewBox(currentView === 'front' ? '0 0 2037 3681' : '0 0 2130 3681')
   }
 
   const handleViewToggle = (view: 'front' | 'back') => {
     setCurrentView(view)
-    unzoomBody()
+    setZoomedRegion(null)
+    setHotspots([])
   }
 
   const getMaxSeverity = (regionId: string): number | null => {
@@ -438,8 +477,8 @@ export function InteractiveBodyMap({ onSelectRegion, selectedRegions: _props = [
       {/* SVG */}
       <div className="relative bg-off-white/50 rounded-xl overflow-hidden border border-soft-mint/30">
         <svg viewBox={viewBox} className="w-full h-auto" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-          <image href={imgSrc} x="0" y="0" width={currentView === 'front' ? '2037' : '2130'} height="3681" style={{ opacity: 0.9 }} />
-          <g>
+          <image href={imgSrc} x="0" y="0" width={canvas.width} height={canvas.height} style={{ opacity: 0.9 }} />
+          <g transform={pathScale}>
             {Object.entries(pathDict).map(([id, path]) => {
               const severity = getMaxSeverity(id)
               const fillColor = zoomedRegion === id ? 'rgba(15, 110, 86, 0.15)' : 

@@ -658,6 +658,20 @@
   };
 
   const SIMPLE_SYMPTOMS = {
+    'Ovarian Cyst': 'Lower belly pain or pressure',
+    'Endometriosis': 'Pelvic pain that may worsen during periods',
+    'Pelvic Inflammatory Disease': 'Lower belly pain with unusual discharge or fever',
+    'Period Pain': 'Cramps during a period',
+    'Heavy Period Bleeding': 'Heavier bleeding than usual during a period',
+    'Irregular Periods': 'Periods that are unusually early, late, or unpredictable',
+    'Vaginal Discharge': 'Unusual vaginal fluid or discharge',
+    'Vaginal Itching': 'Itching around the vagina',
+    'Vaginal Bleeding': 'Unexpected vaginal bleeding',
+    'Pain During Sex': 'Pain during sexual activity',
+    'Pregnancy-related Pelvic Pain': 'Pelvic pain during pregnancy',
+    'Pregnancy-related Back Pain': 'Back pain during pregnancy',
+    'Trouble urinating': 'Difficulty passing urine',
+    'Pain when ejaculating': 'Pain during ejaculation',
     'BPH': 'Trouble starting or keeping urine flowing',
     'Benign Prostatic Hyperplasia': 'Enlarged prostate causing urine problems',
     'Prostate Pain': 'Pain near the prostate area',
@@ -949,6 +963,34 @@
   // These are patient-observable descriptions, not diagnoses. They are
   // combined with the region's clinical source list before rendering.
   const PLAIN_SYMPTOM_BANKS = {
+    // Safe baseline complaints that can apply to any anatomical region.
+    basic: [
+      'Aching', 'Sharp pain', 'Dull pain', 'Burning feeling', 'Stinging feeling', 'Throbbing',
+      'Pressure', 'Tender to touch', 'Sensitive to touch', 'Swelling', 'Pain getting worse',
+      'Pain coming and going', 'Pain after an injury', 'Pain at rest', 'Different from the other side'
+    ],
+    oral: [
+      'Toothache', 'Tooth sensitivity to hot or cold', 'Pain when chewing', 'Loose tooth',
+      'Gum pain', 'Bleeding gums', 'Swollen gums', 'Mouth sore', 'Dry mouth', 'Bad breath',
+      'Cracked or broken tooth', 'Tooth discoloration'
+    ],
+    jaw: [
+      'Jaw pain', 'Jaw stiffness', 'Jaw clicking', 'Jaw popping', 'Jaw locking',
+      'Trouble opening the mouth', 'Pain when chewing', 'Teeth grinding', 'Facial pain'
+    ],
+    eye: [
+      'Eye pain', 'Red or irritated eye', 'Itchy eye', 'Watery eye', 'Dry eye',
+      'Swollen eyelid', 'Blurred vision', 'Double vision', 'Sensitivity to light',
+      'Flashing lights or spots', 'Discharge from the eye'
+    ],
+    ear: [
+      'Ear pain', 'Blocked or full ear', 'Reduced hearing', 'Ringing in the ear',
+      'Itchy ear', 'Fluid from the ear', 'Dizziness with ear symptoms'
+    ],
+    nose: [
+      'Blocked nose', 'Runny nose', 'Sneezing', 'Nosebleed', 'Facial pressure',
+      'Reduced sense of smell', 'Nasal irritation'
+    ],
     general: [
       'Aching', 'Sharp pain', 'Dull pain', 'Burning feeling', 'Stinging feeling', 'Throbbing',
       'Cramping', 'Tightness', 'Pressure', 'Heaviness', 'Tender to touch', 'Sensitive to touch',
@@ -1050,13 +1092,26 @@
 
   function getSymptomBankForRegion(subRegionName) {
     const region = subRegionName.toLowerCase();
-    const banks = [PLAIN_SYMPTOM_BANKS.general];
-    if (/head|scalp|temple|eye|ear|nose|cheek|jaw|mouth|teeth|forehead/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.head);
+    const banks = [PLAIN_SYMPTOM_BANKS.basic];
+
+    if (/teeth|gum/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.oral);
+    else if (/jaw/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.jaw);
+    else if (/eye|eyelid/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.eye);
+    else if (/ear/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.ear);
+    else if (/nose|sinus/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.nose);
+    else if (/head|scalp|temple|cheek|forehead/.test(region)) {
+      banks.push(PLAIN_SYMPTOM_BANKS.head);
+    }
     if (/chest|breast|rib|sternum|collarbone/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.chest, PLAIN_SYMPTOM_BANKS.respiratory);
     if (/abdomen|stomach|flank|navel|colon|appendix/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.abdomen);
-    if (/groin|pelvis|pubic|hip|sacral|tailbone|glute|buttock/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.pelvis);
+    if (/groin|pelvis|pubic|lower belly|sacral|tailbone/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.pelvis);
     if (/neck|spine|back|shoulder|scapula|paraspinal|trapezius/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.muscle, PLAIN_SYMPTOM_BANKS.nerve);
-    if (/arm|elbow|forearm|wrist|hand|finger|thigh|hamstring|knee|calf|shin|ankle|foot|toe/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.muscle, PLAIN_SYMPTOM_BANKS.joint, PLAIN_SYMPTOM_BANKS.nerve);
+    if (/arm|forearm|hand|finger|thigh|hamstring|calf|shin|foot|toe/.test(region)) {
+      banks.push(PLAIN_SYMPTOM_BANKS.muscle, PLAIN_SYMPTOM_BANKS.nerve);
+    }
+    if (/elbow|wrist|knee|ankle|hip|joint/.test(region)) {
+      banks.push(PLAIN_SYMPTOM_BANKS.joint, PLAIN_SYMPTOM_BANKS.nerve);
+    }
     if (/skin|scalp|cheek|forehead|ear|nose|lip|mouth|hand|foot|toe/.test(region)) banks.push(PLAIN_SYMPTOM_BANKS.skin);
     return [...new Set(banks.flat())];
   }
@@ -1179,6 +1234,27 @@
   [dom.bodyFront, dom.bodyBack].forEach((svg) => {
     fullViewBox[svg.id] = svg.getAttribute('viewBox').split(' ').map(Number);
   });
+  const maleRegionPaths = new Map(Array.from($$('.region')).map((path) => [path.id, path.getAttribute('d')]));
+  let femaleRegionPaths = null;
+
+  function loadFemaleRegionPaths() {
+    if (femaleRegionPaths) return Promise.resolve(femaleRegionPaths);
+
+    return fetch('../findex.html')
+      .then((response) => response.text())
+      .then((markup) => {
+        const parsed = new DOMParser().parseFromString(markup, 'text/html');
+        femaleRegionPaths = new Map(Array.from(parsed.querySelectorAll('.region')).map((path) => [path.id, path.getAttribute('d')]));
+        return femaleRegionPaths;
+      });
+  }
+
+  function applyRegionPaths(paths) {
+    $$('.region').forEach((path) => {
+      const data = paths.get(path.id);
+      if (data) path.setAttribute('d', data);
+    });
+  }
 
   // ── Init ───────────────────────────────────────────────────────
   function init() {
@@ -1210,11 +1286,30 @@
     const sources = gender === 'female'
       ? { front: '../front-f.webp', back: '../back-f.webp' }
       : { front: 'front-m.webp', back: 'back-m.webp' };
+    const dimensions = gender === 'female'
+      ? { front: [1764, 3633], back: [1977, 3681] }
+      : { front: [2037, 3681], back: [2130, 3681] };
 
     dom.frontImage.setAttribute('href', sources.front);
     dom.frontImage.setAttribute('xlink:href', sources.front);
     dom.backImage.setAttribute('href', sources.back);
     dom.backImage.setAttribute('xlink:href', sources.back);
+    [
+      [dom.bodyFront, dom.frontImage, dimensions.front],
+      [dom.bodyBack, dom.backImage, dimensions.back]
+    ].forEach(([svg, image, [width, height]]) => {
+      svg.setAttribute('viewBox', `0 0 ${width} ${height}`);
+      image.setAttribute('width', width);
+      image.setAttribute('height', height);
+      fullViewBox[svg.id] = [0, 0, width, height];
+    });
+    if (gender === 'female') {
+      loadFemaleRegionPaths().then((paths) => {
+        if (state.gender === 'female') applyRegionPaths(paths);
+      }).catch(() => undefined);
+    } else {
+      applyRegionPaths(maleRegionPaths);
+    }
     dom.btnMale.classList.toggle('active', gender === 'male');
     dom.btnFemale.classList.toggle('active', gender === 'female');
     dom.genderToggle.querySelector('.toggle-indicator').classList.toggle('right', gender === 'female');
@@ -2362,7 +2457,7 @@
 
     const extraSymptoms = GENDER_SYMPTOMS_BY_REGION[subRegionName]?.[state.gender] || [];
     const plainBank = getSymptomBankForRegion(subRegionName);
-    const allSymptoms = [...new Set([...plainBank, ...(REGION_SYMPTOMS[subRegionName] || []), ...extraSymptoms])]
+    const allSymptoms = [...new Set([...plainBank, ...extraSymptoms])]
       .filter(isAvailableForGender);
     const searchQuery = dom.symptomSearch.value.toLowerCase().trim();
     const filtered = allSymptoms
